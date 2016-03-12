@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Angular App</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
+        <style type="text/css">
+            .my-elem {
+                background: #00c;
+                border-radius: 10%;
+                position: absolute;
+                width: 200px;
+                height: 200px;
+                max-width: 500px;
+                max-height: 500px;
+
+                /* speed */
+                transition: 0.8s;
+                -webkit-transition: 0.8s;
+
+                /* init pos*/
+                left: 100px;
+                top: 200px;
+            }
+        </style>
+
+        <script type="text/javascript">
+            var app = angular.module('app', []);
+
+            app.controller("TutController", function ($scope) {
+                $scope.object = {
+                    pos: {
+                        x: 5,
+                        y: 5
+                    },
+                    size: 150,
+                    style: {}
+                };
+
+                // return the object with current styles
+                $scope.style = function (object) {
+                    return object.style;
+                };
+
+                // update styles depending on UI inputs state
+                $scope.changeStyle = function (object) {
+                    object.style = {
+                        'width': object.size + 'px',
+                        'height': object.size + 'px',
+                        'left': object.pos.x + 'px',
+                        'top': parseInt(object.pos.y) + 200 + 'px'
+                    };
+                };
+
+            });
+
+            app.directive('debugPosition', function () {
+                return {
+                    template: '<strong>Debug:</strong><br> dX: {{object.pos.x}}<br> dY: {{object.pos.y}}<br> Size: {{object.size}}',
+                };
+            });
+
+        </script>
+    </head>
+
+    <body ng-app="app">
+
+        <div class="ng-scope" ng-controller="TutController">
+
+            <label>dX:</label>
+            <input value="10" ng-model="object.pos.x" ng-change="changeStyle(object)"
+                   min="1" max="500" type="range"><br>
+
+            <label>dY:</label>
+            <input value="10" ng-model="object.pos.y"
+                   ng-change="changeStyle(object)" min="1" max="200" type="range"><br>
+
+            <label>Size:</label>
+            <input value="150" ng-model="object.size" ng-change="changeStyle(object)"
+                   min="1" max="500" type="range"><br>
+
+            <p class="ng-binding" debug-position="">Adjust the ranges</p>
+
+            <div id="container">
+                <div id="my-elem" class="my-elem" ng-style="style(object)">
+                </div>
+            </div>
+
+        </div>
+
+    </body>
+</html>
